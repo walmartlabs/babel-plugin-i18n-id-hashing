@@ -14,11 +14,10 @@ export default function({ types: t }) {
     return importedNames.some((name) => path.referencesImport(mod, name));
   }
 
-  // TODO: allow overrides via an option
   function getHash(hashKey) {
     return crypto
       .createHash('sha1')
-      .update(hashKey)
+      .update(hashKey || "")
       .digest('hex');
   }
 
@@ -71,7 +70,7 @@ export default function({ types: t }) {
 
   return {
     visitor: {
-      ExpressionStatement(path, state) {
+      CallExpression(path, state) {
         const moduleSourceName = getModuleSourceName(state.opts);
         const callee = path.get('callee');
 

@@ -8,9 +8,9 @@ var defaultMessages = defineMessages({
   }
 })
 
-defaultMessages["something"];
-defaultMessages.something;
-defaultMessages["something" + "something"]
-var x = ""
-defaultMessages[x]
-defaultMessages["some" + x]
+// defaultMessages["something"];
+// defaultMessages.something;
+// defaultMessages["something" + "something"]
+// var x = ""
+// defaultMessages[x]
+// defaultMessages["some" + x]
