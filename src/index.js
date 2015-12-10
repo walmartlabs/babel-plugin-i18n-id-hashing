@@ -1,5 +1,7 @@
 "use strict";
 
+import crypto from 'crypto';
+
 const FUNCTION_NAMES = ["defineMessages"]
 
 export default function({ types: t }) {
@@ -12,13 +14,15 @@ export default function({ types: t }) {
     return importedNames.some((name) => path.referencesImport(mod, name));
   }
 
-  // TODO: get File specific hash
   // TODO: allow overrides via an option
-  function getHash() {
-    return "asdasddfg3ferf4"
+  function getHash(hashKey) {
+    return crypto
+      .createHash('sha1')
+      .update(hashKey)
+      .digest('hex');
   }
 
-  function processMessage(messageObj) {
+  function processMessage(filename, messageObj) {
     if (!(messageObj[1] && messageObj[1].isObjectExpression())) {
       throw path.buildCodeFrameError(
         `[babel-plugin-i18n-id-hashing] ${callee.node.name}() must be called with message ` +
@@ -41,7 +45,7 @@ export default function({ types: t }) {
       [1];
 
     const objectProperties = generateObjectFromNode(messageObj[1]);
-    const generatedMessageId = `${getHash(objectProperties)}.${objectProperties.id}`
+    const generatedMessageId = `${getHash(filename)}.${objectProperties.id}`
 
     // Replace the Object's key with the generatedMessageId
     const objectKey = messageObj[0];
@@ -87,7 +91,7 @@ export default function({ types: t }) {
             prop.get('key'),
             prop.get('value'),
           ])
-          .forEach(processMessage);
+          .forEach(processMessage.bind(null, state.file.opts.filename));
       },
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
       MemberExpression(path, state) {
@@ -95,15 +99,16 @@ export default function({ types: t }) {
         // TODO: register messageName when ExpressionStatement is called
         if (path.node.object.name !== "defaultMessages") { return; }
 
+        const filename = state.file.opts.filename;
         let accessor = path.get("property");
 
         if (accessor.type === "StringLiteral") {
-          accessor.replaceWith(t.stringLiteral(`${getHash()}.${accessor.node.value}`))
+          accessor.replaceWith(t.stringLiteral(`${getHash(filename)}.${accessor.node.value}`))
         } else {
           // Convert xMemberExpression.identifier -> xMemberExpression[identifier]
           path.node.computed = true
           // Add the hash to the result of any Identifier or Expression
-          accessor.replaceWith(t.binaryExpression("+", t.stringLiteral(getHash()), accessor.node))
+          accessor.replaceWith(t.binaryExpression("+", t.stringLiteral(getHash(filename)), accessor.node))
         }
       }
     }
