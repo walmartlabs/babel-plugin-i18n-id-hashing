@@ -16,7 +16,10 @@
     "rimraf": "^2.4.3"
   },
   "scripts": {
-    "test": "babel test/ --out-dir tmp/ --plugins \"./index.js\""
+    "build": "babel src/ --out-dir lib/",
+    "check": "npm run clean && npm run build && npm run test",
+    "clean": "rimraf lib/",
+    "test": "babel test/ --out-dir tmp/ --plugins \"./lib/index.js\""
   },
   "keywords": [
     "babel-plugin",
