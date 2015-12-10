@@ -20,6 +20,15 @@ export default function({ types: t }) {
   }
 
   /**
+   * @param  {Object}  opts - A Babel options object
+   *
+   * @return {Object}  Returns the Identifier name to search for calls of. Defaults to `defaultMessages`
+   */
+  function getMethodName(opts) {
+    return opts.methodName || "defaultMessages";
+  }
+
+  /**
    * @param  {String}  hashKey - A string used to generate a SHA1 hash
    *
    * @return {Object}  A SHA1 hash of the hashKey
@@ -104,9 +113,8 @@ export default function({ types: t }) {
       },
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
       MemberExpression(path, state) {
-        // TODO: Take messageName as an option
         // TODO: register messageName when ExpressionStatement is called
-        if (path.node.object.name !== "defaultMessages") { return; }
+        if (path.node.object.name !== getMethodName(state.opts)) { return; }
 
         const filename = state.file.opts.filename;
         let accessor = path.get("property");
