@@ -5,20 +5,45 @@ import crypto from 'crypto';
 const FUNCTION_NAMES = ["defineMessages"]
 
 export default function({ types: t }) {
-  function getModuleSourceName(opts) {
-    return opts.moduleSourceName || "react-intl";
-  }
-
   function referencesImport(path, mod, importedNames) {
     if (!(path.isIdentifier() || path.isJSXIdentifier())) { return false; }
     return importedNames.some((name) => path.referencesImport(mod, name));
   }
 
+  /**
+   * @param  {Object}  opts - A Babel options object
+   *
+   * @return {Object}  Returns the module name to search for imports of. Defaults to `react-intl`
+   */
+  function getModuleSourceName(opts) {
+    return opts.moduleSourceName || "react-intl";
+  }
+
+  /**
+   * @param  {String}  hashKey - A string used to generate a SHA1 hash
+   *
+   * @return {Object}  A SHA1 hash of the hashKey
+   */
   function getHash(hashKey) {
     return crypto
       .createHash('sha1')
       .update(hashKey || "")
       .digest('hex');
+  }
+
+  /**
+   * @param  {ASTNode}  path - An AST node representing a POJO.
+   *
+   * @return {Object}  A POJO representation of an AST node
+   */
+  function generateObjectFromNode(path) {
+    return path.get('properties').map((prop) => [
+      prop.get('key').node.value,
+      prop.get('value').node.value,
+    ]).reduce((previousValue, property) => {
+      previousValue[property[0]] = property[1]
+      return previousValue;
+    }, {});
   }
 
   function processMessage(filename, messageObj) {
@@ -51,21 +76,6 @@ export default function({ types: t }) {
     objectKey.replaceWith(t.stringLiteral(generatedMessageId));
     // Replace the Object's `id` property with the generatedMessageId
     objectIdProperty.replaceWith(t.stringLiteral(generatedMessageId));
-  }
-
-  /**
-   * @param  {ASTNode}  path - An AST node representing a POJO.
-   *
-   * @return {Object}  A POJO representation of an AST node
-   */
-  function generateObjectFromNode(path) {
-    return path.get('properties').map((prop) => [
-      prop.get('key').node.value,
-      prop.get('value').node.value,
-    ]).reduce((previousValue, property) => {
-      previousValue[property[0]] = property[1]
-      return previousValue;
-    }, {});
   }
 
   return {
