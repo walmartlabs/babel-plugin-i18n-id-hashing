@@ -13,6 +13,7 @@ export default function({ types: t }) {
   }
 
   // TODO: get File specific hash
+  // TODO: allow overrides via an option
   function getHash() {
     return "asdasddfg3ferf4"
   }
