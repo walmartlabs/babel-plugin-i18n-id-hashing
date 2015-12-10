@@ -5,6 +5,12 @@
   "license": "MIT",
   "main": "lib/index.js",
   "author": "Eric Baer <me@ericbaer.com>",
+  "homepage": "https://github.com/walmartreact/babel-plugin-i18n-id-hashing",
+  "bugs": {
+    "url": "https://github.com/walmartreact/babel-plugin-i18n-id-hashing/issues"
+  },
+  "repository": "git://github.com/walmartreact/babel-plugin-i18n-id-hashing.git",
+  "private": false,
   "dependencies": {
     "babel-runtime": "^6.2.0"
   },
