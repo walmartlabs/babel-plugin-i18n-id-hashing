@@ -48,4 +48,5 @@ var assertTransformation = function (directoryName) {
 }
 
 getDirectories(__dirname)
-  .each(assertTransformation);
+  .each(assertTransformation)
+  .catch((e) => { throw e; });
