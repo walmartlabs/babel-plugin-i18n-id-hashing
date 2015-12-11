@@ -28,7 +28,7 @@
     "build": "babel src/ --out-dir lib/",
     "check": "npm run clean && npm run build && npm run test",
     "clean": "rimraf lib/",
-    "test": "babel test/ --out-dir tmp/ --plugins \"./lib/index.js\""
+    "test": "node ./test/index.js"
   },
   "keywords": [
     "babel-plugin",
