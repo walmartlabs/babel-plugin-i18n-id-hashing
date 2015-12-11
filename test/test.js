@@ -1,7 +1,6 @@
 "use strict";
 
 var _ = require("lodash");
-var assert = require("assert");
 var babel = require("babel-core");
 var e = require("core-error-predicates");
 var jsdiff = require("diff");
@@ -12,7 +11,7 @@ var Promise = require("bluebird");
 var fs = Promise.promisifyAll(require("fs"));
 var transformFile = Promise.promisify(babel.transformFile);
 
-function getDirectories(srcpath) {
+var getDirectories = function getDirectories(srcpath) {
   return fs.readdirAsync(srcpath)
     .filter((fileName) => {
       return fs.statAsync(path.join(srcpath, fileName))
@@ -21,6 +20,10 @@ function getDirectories(srcpath) {
           throw new Error("File Access Error for: " + path.join(srcpath, fileName));
         });
     });
+}
+
+var getDiff = function getDiff(obj) {
+  return jsdiff.diffTrimmedLines(obj.actual, obj.expected);
 }
 
 var assertTransformation = function (directoryName) {
@@ -35,28 +38,14 @@ var assertTransformation = function (directoryName) {
     expected: fs.readFileAsync(path.join(__dirname, "/" + directoryName + "/expected.js"), "utf8")
       .then(_.trim),
   })
-  .then((result) => {
-    var diff = jsdiff.diffTrimmedLines(result.actual, result.expected);
-    assert.equal(diff.length, 1);
-  });
+  .then(getDiff)
+  .then((diff) => {
+    return diff.length === 1
+      ? "✓ " + directoryName
+      : "❌ " + directoryName;
+  })
+  .then(console.log);
 }
 
 getDirectories(__dirname)
-  .each(assertTransformation)
-
-// import {defineMessages} from "react-intl";
-//
-// var defaultMessages = defineMessages({
-//   "something": {
-//     "id": "my-clever-id",
-//     "description": "This is the place where the things go",
-//     "defaultMessage": "Oh Yea"
-//   }
-// })
-//
-// defaultMessages["something"];
-// defaultMessages.something;
-// defaultMessages["something" + "something"]
-// var x = ""
-// defaultMessages[x]
-// defaultMessages["some" + x]
+  .each(assertTransformation);
