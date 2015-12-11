@@ -19,6 +19,7 @@
     "babel-core": "^6.3.17",
     "babel-preset-es2015": "^6.1.18",
     "bluebird": "^3.0.6",
+    "core-error-predicates": "^1.1.0",
     "diff": "^2.2.1",
     "lodash": "^3.10.1",
     "rimraf": "^2.4.3"

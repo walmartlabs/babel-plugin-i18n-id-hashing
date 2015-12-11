@@ -3,6 +3,7 @@
 var _ = require("lodash");
 var assert = require("assert");
 var babel = require("babel-core");
+var e = require("core-error-predicates");
 var jsdiff = require("diff");
 var path = require("path");
 var Promise = require("bluebird");
@@ -11,11 +12,15 @@ var Promise = require("bluebird");
 var fs = Promise.promisifyAll(require("fs"));
 var transformFile = Promise.promisify(babel.transformFile);
 
-// TODO: Refactor to use Promises
 function getDirectories(srcpath) {
-  return fs.readdirSync(srcpath).filter(function(file) {
-    return fs.statSync(path.join(srcpath, file)).isDirectory();
-  });
+  return fs.readdirAsync(srcpath)
+    .filter((fileName) => {
+      return fs.statAsync(path.join(srcpath, fileName))
+        .then(stat => stat.isDirectory())
+        .catch(e.FileAccessError, () => {
+          throw new Error("File Access Error for: " + path.join(srcpath, fileName));
+        });
+    });
 }
 
 var assertTransformation = function (directoryName) {
@@ -37,7 +42,7 @@ var assertTransformation = function (directoryName) {
 }
 
 getDirectories(__dirname)
-  .forEach(assertTransformation);
+  .each(assertTransformation)
 
 // import {defineMessages} from "react-intl";
 //
