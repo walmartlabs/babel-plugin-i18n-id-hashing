@@ -9,6 +9,7 @@ var Promise = require("bluebird");
 
 // Promisified Functions
 var fs = Promise.promisifyAll(require("fs"));
+var glob = Promise.promisify(require("glob"));
 var transformFile = Promise.promisify(babel.transformFile);
 
 var getDirectories = function getDirectories(srcpath) {
@@ -32,7 +33,9 @@ var assertTransformation = function (directoryName) {
   };
 
   Promise.props({
-    actual: transformFile(path.join(__dirname, "/" + directoryName + "/actual.js"), options)
+    actual: glob(path.join(__dirname, "/" + directoryName + "/actual.js*"))
+      .then(_.first)
+      .then(_.partialRight(transformFile, options))
       .then(result => result.code)
       .then(_.trim),
     expected: fs.readFileAsync(path.join(__dirname, "/" + directoryName + "/expected.js"), "utf8")
