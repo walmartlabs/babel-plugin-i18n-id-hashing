@@ -21,13 +21,17 @@
     "bluebird": "^3.0.6",
     "core-error-predicates": "^1.1.0",
     "diff": "^2.2.1",
+    "eslint": "^1.10.3",
+    "eslint-config-defaults": "^7.1.1",
+    "eslint-plugin-filenames": "^0.2.0",
     "lodash": "^3.10.1",
     "rimraf": "^2.4.3"
   },
   "scripts": {
     "build": "babel src/ --out-dir lib/",
-    "check": "npm run clean && npm run build && npm run test",
+    "check": "npm run clean && npm run build && npm run lint && npm run test",
     "clean": "rimraf lib/",
+    "lint": "eslint src",
     "test": "node ./test/index.js"
   },
   "keywords": [

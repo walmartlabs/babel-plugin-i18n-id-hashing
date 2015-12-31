@@ -1,0 +1,6 @@
+---
+"extends":
+  - "defaults/configurations/walmart/es6-node"
+
+"rules":
+  "max-len": [2, 100, 2, {"ignoreUrls": true, "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\("}]
