@@ -57,7 +57,7 @@ const i18nIdHashing = function ({ types: t }) {
 
   const processMessage = function processMessage(filename, messageObj) {
     if (!(messageObj[1] && messageObj[1].isObjectExpression())) {
-      throw path.buildCodeFrameError(
+      throw messageObj.buildCodeFrameError(
         `[babel-plugin-i18n-id-hashing] ${messageObj.node.name}() must be called with message ` +
         `descriptors defined as object expressions.`
       );
