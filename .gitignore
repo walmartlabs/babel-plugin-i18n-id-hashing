@@ -34,7 +34,7 @@ out/
 .settings/
 
 # --------------------
-# App Files
+# Node Files
 # --------------------
 node_modules
-tmp
+npm-debug.log
