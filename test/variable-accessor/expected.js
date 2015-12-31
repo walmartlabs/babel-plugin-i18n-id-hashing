@@ -5,4 +5,4 @@ var _reactIntl = require("react-intl");
 var defaultMessages = {};
 
 var x = "something";
-defaultMessages["fbe06e15481753997fdc62d735c20d9e45c8e30d" + x];
+defaultMessages["01fa68a31c25ce7f8356f8e33a9cbe19beb617f1" + x];

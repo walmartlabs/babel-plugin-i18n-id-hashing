@@ -1,6 +1,7 @@
 "use strict";
 
-import crypto from 'crypto';
+import crypto from "crypto";
+import path from "path";
 
 const FUNCTION_NAMES = ["defineMessages"]
 
@@ -89,9 +90,9 @@ export default function({ types: t }) {
 
   return {
     visitor: {
-      CallExpression(path, state) {
+      CallExpression(pathNode, state) {
         const moduleSourceName = getModuleSourceName(state.opts);
-        const callee = path.get('callee');
+        const callee = pathNode.get('callee');
 
         // Return if the call expression is either
         //   - not found in a file that imports `react-intl`
@@ -100,7 +101,10 @@ export default function({ types: t }) {
 
         // FUNCTION_NAMES functions are of the form function(Object messages)
         // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
-        let messagesObj = path.get('arguments')[0];
+        let messagesObj = pathNode.get('arguments')[0];
+
+        // Use a relative path to ensure hash key is the same on any system
+        const filePath = path.relative(__dirname, state.file.opts.filename);
 
         // Process each message
         messagesObj
@@ -109,23 +113,25 @@ export default function({ types: t }) {
             prop.get('key'),
             prop.get('value'),
           ])
-          .forEach(processMessage.bind(null, state.file.opts.filename));
+          .forEach(processMessage.bind(null, filePath));
       },
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
-      MemberExpression(path, state) {
+      MemberExpression(pathNode, state) {
         // TODO: register messageName when ExpressionStatement is called
-        if (path.node.object.name !== getMethodName(state.opts)) { return; }
+        if (pathNode.node.object.name !== getMethodName(state.opts)) { return; }
 
-        const filename = state.file.opts.filename;
-        let accessor = path.get("property");
+        // Use a relative path to ensure hash key is the same on any system
+        const filePath = path.relative(__dirname, state.file.opts.filename);
+
+        let accessor = pathNode.get("property");
 
         if (accessor.type === "StringLiteral") {
-          accessor.replaceWith(t.stringLiteral(`${getHash(filename)}.${accessor.node.value}`))
+          accessor.replaceWith(t.stringLiteral(`${getHash(filePath)}.${accessor.node.value}`))
         } else {
           // Convert xMemberExpression.identifier -> xMemberExpression[identifier]
-          path.node.computed = true
+          pathNode.node.computed = true
           // Add the hash to the result of any Identifier or Expression
-          accessor.replaceWith(t.binaryExpression("+", t.stringLiteral(getHash(filename)), accessor.node))
+          accessor.replaceWith(t.binaryExpression("+", t.stringLiteral(getHash(filePath)), accessor.node))
         }
       }
     }

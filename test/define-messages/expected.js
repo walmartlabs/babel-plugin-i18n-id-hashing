@@ -3,8 +3,8 @@
 var _reactIntl = require("react-intl");
 
 var defaultMessages = (0, _reactIntl.defineMessages)({
-  "b999794196e63ce0c8167d773fdf3be7b03ece76.my-clever-id": {
-    "id": "b999794196e63ce0c8167d773fdf3be7b03ece76.my-clever-id",
+  "3f5824bbf88e78afbb8f5cfcdfa3dfd1e308a1f7.my-clever-id": {
+    "id": "3f5824bbf88e78afbb8f5cfcdfa3dfd1e308a1f7.my-clever-id",
     "description": "This is the place where the things go",
     "defaultMessage": "Oh Yea"
   }
