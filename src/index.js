@@ -71,7 +71,14 @@ const i18nIdHashing = function ({ types: t }) {
         prop.get("value")
       ])
       // Returns [[idKeyNode, idValueNode]]
-      .filter((prop) => prop[0].node.value === "id")
+      .filter((prop) => {
+        // TODO: Find out why does this happens and if this is the correct solution.
+        // All "value" attributes become "name" when interpreting a JSX file.
+        const value = prop[0].node.value;
+        const name = prop[0].node.name;
+
+        return (value || name) === "id";
+      })
       // Returns [idKeyNode, idValueNode]
       .pop()
       // Retuens idValueNode

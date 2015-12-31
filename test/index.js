@@ -28,7 +28,9 @@ var getDiff = function getDiff(obj) {
 }
 
 var assertTransformation = function (directoryName) {
+  // TODO: This should be customizable
   var options = {
+    "presets": [ "es2015", "react" ],
     "plugins": [ "../lib/index.js" ]
   };
 

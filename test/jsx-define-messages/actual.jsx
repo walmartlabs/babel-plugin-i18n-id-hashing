@@ -1,9 +1,17 @@
-import {defineMessages} from "react-intl";
+import {FormattedMessage, defineMessages} from "react-intl";
 
 const defaultMessages = defineMessages({
-  "something": {
-    "id": "my-clever-id",
-    "description": "This is the place where the things go",
-    "defaultMessage": "Oh Yea"
+  "cancel-button": {
+    id: "cancel-button",
+    description: "a",
+    defaultMessage: "Cancel"
   }
 });
+
+const CancelButton = ({translations}) => (
+  <button>
+    <FormattedMessage {...translations["cancel-button"]}/>
+  </button>
+);
+
+export default CancelButton;
