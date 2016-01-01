@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import path from "path";
 
+// TODO: Make this customizable
 const FUNCTION_NAMES = ["defineMessages"];
 
 const i18nIdHashing = function ({ types: t }) {
