@@ -1,8 +1,8 @@
 import crypto from "crypto";
 import path from "path";
 
-// TODO: Make this customizable
 const FUNCTION_NAMES = ["defineMessages"];
+const IDENTIFIERS_WITH_NAMESPACED_IDS = ["defaultMessages"];
 
 const i18nIdHashing = function ({ types: t }) {
   const referencesImport = function referencesImport(pathNode, mod, importedNames) {
@@ -25,8 +25,8 @@ const i18nIdHashing = function ({ types: t }) {
    * @return {Object}  Returns the Identifier name to search for calls of. Defaults to
    * `defaultMessages`
    */
-  const getMethodName = function getMethodName(opts) {
-    return opts.methodName || "defaultMessages";
+  const getIdentifiersWithNamespacedIds = function getIdentifiersWithNamespacedIds(opts) {
+    return opts.methodName || IDENTIFIERS_WITH_NAMESPACED_IDS;
   };
 
   /**
@@ -125,7 +125,9 @@ const i18nIdHashing = function ({ types: t }) {
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
       MemberExpression(pathNode, state) {
         // TODO: register messageName when ExpressionStatement is called
-        if (pathNode.node.object.name !== getMethodName(state.opts)) { return; }
+        if (!getIdentifiersWithNamespacedIds(state.opts).includes(pathNode.node.object.name)) {
+          return;
+        }
 
         // Use a relative path to ensure hash key is the same on any system
         const filePath = path.relative(__dirname, state.file.opts.filename);
