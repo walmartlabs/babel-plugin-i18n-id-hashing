@@ -7,8 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 var _reactIntl = require("react-intl");
 
 var defaultMessages = (0, _reactIntl.defineMessages)({
-  "a6e363212bf6d854c6658b1fb64cb238a076e8a0.undefined": {
-    id: "a6e363212bf6d854c6658b1fb64cb238a076e8a0.undefined",
+  "c63c96bba4ba4f28992169dd214843d63818e26c.undefined": {
+    id: "c63c96bba4ba4f28992169dd214843d63818e26c.undefined",
     description: "a",
     defaultMessage: "Cancel"
   }
@@ -18,7 +18,7 @@ var CancelButton = function CancelButton() {
   return React.createElement(
     "button",
     null,
-    React.createElement(_reactIntl.FormattedMessage, defaultMessages["a6e363212bf6d854c6658b1fb64cb238a076e8a0.a6e363212bf6d854c6658b1fb64cb238a076e8a0.a6e363212bf6d854c6658b1fb64cb238a076e8a0.cancel-button"])
+    React.createElement(_reactIntl.FormattedMessage, defaultMessages["c63c96bba4ba4f28992169dd214843d63818e26c.c63c96bba4ba4f28992169dd214843d63818e26c.c63c96bba4ba4f28992169dd214843d63818e26c.cancel-button"])
   );
 };
 

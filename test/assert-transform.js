@@ -8,9 +8,7 @@ var jsdiff = require("diff");
 var path = require("path");
 var Promise = require("bluebird");
 
-// Promisified Functions
 var fs = Promise.promisifyAll(require("fs"));
-var transformFile = Promise.promisify(babel.transformFile);
 
 var getDiff = function getDiff(obj) {
   return jsdiff.diffTrimmedLines(obj.actual, obj.expected);
@@ -29,7 +27,8 @@ var generateErrorMessage = function generateError(diff) {
 // TODO: Allow initial / expected to be Strings
 module.exports = function (initial, expected, babelConfig) {
   return Promise.props({
-    actual: transformFile(path.join(__dirname, initial), babelConfig)
+    actual: fs.readFileAsync(path.join(__dirname, initial), "utf8")
+      .then(_.partialRight(babel.transform, babelConfig))
       .then(result => result.code)
       .then(_.trim),
     expected: fs.readFileAsync(path.join(__dirname, expected), "utf8")

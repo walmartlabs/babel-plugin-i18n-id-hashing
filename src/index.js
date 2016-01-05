@@ -35,6 +35,7 @@ const i18nIdHashing = function ({ types: t }) {
    * @return {Object}  A SHA1 hash of the hashKey
    */
   const getHash = function getHash(hashKey) {
+    console.log(hashKey);
     return crypto
       .createHash("sha1")
       .update(hashKey || "")
