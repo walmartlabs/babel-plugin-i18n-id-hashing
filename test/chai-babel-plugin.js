@@ -9,7 +9,7 @@ var options = {
   "presets": [ "es2015", "react" ],
   "plugins": [
     ["../lib/index.js", {
-      "methodName": ["defaultMessages"],
+      "methodName": ["defaultMessages", "translations"],
     }]
   ]
 };
