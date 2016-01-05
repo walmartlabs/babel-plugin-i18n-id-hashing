@@ -8,9 +8,9 @@ const defaultMessages = defineMessages({
   }
 });
 
-const CancelButton = ({translations}) => (
+const CancelButton = () => (
   <button>
-    <FormattedMessage {...translations["cancel-button"]}/>
+    <FormattedMessage {...defaultMessages["cancel-button"]}/>
   </button>
 );
 
