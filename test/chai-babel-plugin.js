@@ -35,19 +35,17 @@ module.exports = function (chai, utils) {
 
     // assertion
     var errorMessage = "expected babel.transformFile(#{this}) === " + filePath + "\n\n";
-    errorMessage += "Actual:\n----------\n#{act} \n\n";
-    errorMessage += "Expected:\n----------\n#{exp}";
+    errorMessage += "Actual:\n----------\n" + transformedFile + " \n\n";
+    errorMessage += "Expected:\n----------\n" + expectedFileContents;
 
     var negationErrorMessage = "expected babel.transformFile(#{this}) !== " + filePath + "\n\n";
-    negationErrorMessage += "Actual:\n----------\n#{act} \n\n";
-    negationErrorMessage += "Expected:\n----------\n#{exp}";
+    negationErrorMessage += "Actual:\n----------\n" + transformedFile + " \n\n";
+    negationErrorMessage += "Expected:\n----------\n" + expectedFileContents;
 
     this.assert(
       diff.length === 1,
       errorMessage,
-      negationErrorMessage,
-      expectedFileContents, // expected
-      transformedFile // actual
+      negationErrorMessage
     );
   });
 
