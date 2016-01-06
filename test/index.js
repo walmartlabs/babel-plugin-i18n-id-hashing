@@ -60,6 +60,15 @@ describe("babel-plugin-i18n-id-hashing", function() {
         path.join(__dirname, "./no-transform/actual.js"),
         path.join(__dirname, "./no-transform/expected.js"), babelOpts);
     });
-    it("should transform any method defined in the 'methodName' array");
+    it("should transform any method defined in the 'methodName' array", function () {
+      var babelOpts = _.clone(BABEL_OPTIONS);
+      babelOpts.plugins[0][1] = {
+        "methodName": ["translations"]
+      };
+
+      return assertTransform(
+        path.join(__dirname, "./dot-property-accessor-alternate-naming/actual.js"),
+        path.join(__dirname, "./dot-property-accessor-alternate-naming/expected.js"), babelOpts);
+    });
   });
 });
