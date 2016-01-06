@@ -50,20 +50,20 @@ describe("babel-plugin-i18n-id-hashing", function() {
         path.join(__dirname, "./define-messages/actual.js"),
         path.join(__dirname, "./define-messages/expected.js"), BABEL_OPTIONS);
     });
-    it("should not transform anything when 'methodName' is an empty array", function () {
+    it("should not transform anything when 'varsContainingMessages' is an empty array", function () {
       var babelOpts = _.clone(BABEL_OPTIONS);
       babelOpts.plugins[0][1] = {
-        "methodName": []
+        "varsContainingMessages": []
       };
 
       return assertTransform(
         path.join(__dirname, "./no-transform/actual.js"),
         path.join(__dirname, "./no-transform/expected.js"), babelOpts);
     });
-    it("should transform any method defined in the 'methodName' array", function () {
+    it("should transform any method defined in the 'varsContainingMessages' array", function () {
       var babelOpts = _.clone(BABEL_OPTIONS);
       babelOpts.plugins[0][1] = {
-        "methodName": ["translations"]
+        "varsContainingMessages": ["translations"]
       };
 
       return assertTransform(

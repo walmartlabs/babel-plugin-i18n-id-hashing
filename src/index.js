@@ -27,8 +27,18 @@ const i18nIdHashing = function ({ types: t }) {
    * @return {Object}  Returns the Identifier name to search for calls of. Defaults to
    * `defaultMessages`
    */
-  const getIdentifiersWithNamespacedIds = function getIdentifiersWithNamespacedIds(opts) {
-    return opts.methodName || IDENTIFIERS_THAT_CONTAIN_MESSAGES;
+  const getIdentifiersThatContainMessages = function getIdentifiersThatContainMessages(opts) {
+    return opts.varsContainingMessages || IDENTIFIERS_THAT_CONTAIN_MESSAGES;
+  };
+
+  /**
+   * @param  {Object}  opts - A Babel options object
+   *
+   * @return {Object}  Returns the Identifier name to search for calls of. Defaults to
+   * `defaultMessages`
+   */
+  const getIdentifiersThatDefineMessages = function getIdentifiersThatDefineMessages(opts) {
+    return opts.functionsDefiningMessages || FUNCTIONS_THAT_DEFINE_MESSAGES;
   };
 
   /**
@@ -106,7 +116,8 @@ const i18nIdHashing = function ({ types: t }) {
         // Return if the call expression is either
         //   - not found in a file that imports `react-intl`
         //   - is not a call to one of the FUNCTIONS_THAT_DEFINE_MESSAGES
-        if (referencesImport(callee, moduleSourceName, FUNCTIONS_THAT_DEFINE_MESSAGES) === false) { return; }
+        const identifierWhitelist = getIdentifiersThatDefineMessages(state.opts);
+        if (referencesImport(callee, moduleSourceName, identifierWhitelist) === false) { return; }
 
         // FUNCTIONS_THAT_DEFINE_MESSAGES functions are of the form function(Object messages)
         // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
@@ -127,7 +138,7 @@ const i18nIdHashing = function ({ types: t }) {
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
       MemberExpression(pathNode, state) {
         // TODO: register messageName when ExpressionStatement is called
-        if (!getIdentifiersWithNamespacedIds(state.opts).includes(pathNode.node.object.name)) {
+        if (!getIdentifiersThatContainMessages(state.opts).includes(pathNode.node.object.name)) {
           return;
         }
 
