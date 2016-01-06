@@ -29,7 +29,7 @@ module.exports = function (initial, expected, babelConfig) {
   return Promise.props({
     actual: fs.readFileAsync(path.join(__dirname, initial), "utf8")
       .then(_.partialRight(babel.transform, babelConfig))
-      .then(result => result.code)
+      .then(function (result) { return result.code; })
       .then(_.trim),
     expected: fs.readFileAsync(path.join(__dirname, expected), "utf8")
       .then(_.trim),
