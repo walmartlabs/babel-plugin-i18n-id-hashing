@@ -17,11 +17,6 @@ describe("babel-plugin-i18n-id-hashing", function() {
     babel.transform("const x = 1;", BABEL_OPTIONS);
   })
 
-  it("should change the key and the id property in defineMessages", function () {
-    return assertTransform(
-      path.join(__dirname, "./define-messages/actual.js"),
-      path.join(__dirname, "./define-messages/expected.js"), BABEL_OPTIONS);
-  });
   it("should transform dot property access to specified method", function () {
     return assertTransform(
       path.join(__dirname, "./dot-property-accessor/actual.js"),
@@ -50,11 +45,21 @@ describe("babel-plugin-i18n-id-hashing", function() {
       path.join(__dirname,"./variable-accessor/expected.js"), BABEL_OPTIONS);
   });
   describe("options", function () {
-    // -    ["../lib/index.js", {
-    // -      "methodName": ["defaultMessages", "translations"],
-    // -    }]
-    it("should transform 'defineMessages' by default");
-    it("should not transform anything when 'methodName' is an empty array");
+    it("should transform 'defineMessages' by default", function () {
+      return assertTransform(
+        path.join(__dirname, "./define-messages/actual.js"),
+        path.join(__dirname, "./define-messages/expected.js"), BABEL_OPTIONS);
+    });
+    it("should not transform anything when 'methodName' is an empty array", function () {
+      var babelOpts = _.clone(BABEL_OPTIONS);
+      babelOpts.plugins[0][1] = {
+        "methodName": []
+      };
+
+      return assertTransform(
+        path.join(__dirname, "./no-transform/actual.js"),
+        path.join(__dirname, "./no-transform/expected.js"), babelOpts);
+    });
     it("should transform any method defined in the 'methodName' array");
   });
 });

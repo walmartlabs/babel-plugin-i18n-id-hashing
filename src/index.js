@@ -1,8 +1,10 @@
 import crypto from "crypto";
+import isEmpty from "lodash/Lang/isEmpty";
 import path from "path";
 
-const FUNCTION_NAMES = ["defineMessages"];
-const IDENTIFIERS_WITH_NAMESPACED_IDS = ["defaultMessages"];
+// TODO: Make this configurable
+const FUNCTIONS_THAT_DEFINE_MESSAGES = ["defineMessages"];
+const IDENTIFIERS_THAT_CONTAIN_MESSAGES = ["defaultMessages"];
 
 const i18nIdHashing = function ({ types: t }) {
   const referencesImport = function referencesImport(pathNode, mod, importedNames) {
@@ -26,7 +28,7 @@ const i18nIdHashing = function ({ types: t }) {
    * `defaultMessages`
    */
   const getIdentifiersWithNamespacedIds = function getIdentifiersWithNamespacedIds(opts) {
-    return opts.methodName || IDENTIFIERS_WITH_NAMESPACED_IDS;
+    return opts.methodName || IDENTIFIERS_THAT_CONTAIN_MESSAGES;
   };
 
   /**
@@ -103,10 +105,10 @@ const i18nIdHashing = function ({ types: t }) {
 
         // Return if the call expression is either
         //   - not found in a file that imports `react-intl`
-        //   - is not a call to one of the FUNCTION_NAMES
-        if (referencesImport(callee, moduleSourceName, FUNCTION_NAMES) === false) { return; }
+        //   - is not a call to one of the FUNCTIONS_THAT_DEFINE_MESSAGES
+        if (referencesImport(callee, moduleSourceName, FUNCTIONS_THAT_DEFINE_MESSAGES) === false) { return; }
 
-        // FUNCTION_NAMES functions are of the form function(Object messages)
+        // FUNCTIONS_THAT_DEFINE_MESSAGES functions are of the form function(Object messages)
         // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
         const messagesObj = pathNode.get("arguments")[0];
 
