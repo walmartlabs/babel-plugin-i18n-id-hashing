@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import isEmpty from "lodash/Lang/isEmpty";
 import path from "path";
 
 // TODO: Make this configurable
