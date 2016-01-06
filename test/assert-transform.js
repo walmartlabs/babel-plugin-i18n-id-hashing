@@ -2,7 +2,7 @@
 
 var _ = require("lodash");
 var babel = require("babel-core");
-var colors = require('colors/safe');
+var colors = require("colors/safe");
 var e = require("core-error-predicates");
 var jsdiff = require("diff");
 var path = require("path");
@@ -16,7 +16,7 @@ var getDiff = function getDiff(obj) {
 
 var generateErrorMessage = function generateError(diff) {
   return diff.map(function(part){
-    var color = part.added ? 'green' : part.removed ? 'red' : 'grey';
+    var color = part.added ? "green" : part.removed ? "red" : "grey";
     return colors[color](part.value);
   })
   .reduce(function (previousValue, currentValue) {
