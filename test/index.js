@@ -13,6 +13,7 @@ var BABEL_OPTIONS = {
 describe("babel-plugin-i18n-id-hashing", function() {
   before(function () {
     // TODO: WTF babel needs to warm up! This is Bullshit!
+    this.timeout(10000);
     babel.transform("const x = 1;", BABEL_OPTIONS);
   })
 
