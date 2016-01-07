@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import path from "path";
 
-// TODO: Make this configurable
 const FUNCTIONS_THAT_DEFINE_MESSAGES = ["defineMessages"];
 const IDENTIFIERS_THAT_CONTAIN_MESSAGES = ["defaultMessages"];
 
@@ -58,10 +57,15 @@ const i18nIdHashing = function ({ types: t }) {
    * @return {Object}  A POJO representation of an AST node
    */
   const generateObjectFromNode = function generateObjectFromNode(pathNode) {
-    return pathNode.get("properties").map((prop) => [
-      prop.get("key").node.value,
-      prop.get("value").node.value
-    ]).reduce((previousValue, property) => {
+    return pathNode.get("properties").map((prop) => {
+      const isKeyIdentifier = prop.get("key").node.type === "Identifier";
+      const objectKey = isKeyIdentifier ? prop.get("key").node.name : prop.get("key").node.value;
+
+      return [
+        objectKey,
+        prop.get("value").node.value
+      ];
+    }).reduce((previousValue, property) => {
       previousValue[property[0]] = property[1];
       return previousValue;
     }, {});
@@ -98,6 +102,8 @@ const i18nIdHashing = function ({ types: t }) {
 
     const objectProperties = generateObjectFromNode(messageObj[1]);
     const generatedMessageId = `${getHash(filename)}.${objectProperties.id}`;
+
+    // TODO: Error if the object key and the id property are mismatched
 
     // Replace the Object's key with the generatedMessageId
     const objectKey = messageObj[0];

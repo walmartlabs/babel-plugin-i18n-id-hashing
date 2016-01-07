@@ -45,10 +45,15 @@ describe("babel-plugin-i18n-id-hashing", function() {
       path.join(__dirname,"./variable-accessor/expected.js"), BABEL_OPTIONS);
   });
   describe("options", function () {
-    it("should transform 'defineMessages' by default", function () {
+    it("should transform 'defineMessages' by default (string keys)", function () {
       return assertTransform(
-        path.join(__dirname, "./define-messages/actual.js"),
-        path.join(__dirname, "./define-messages/expected.js"), BABEL_OPTIONS);
+        path.join(__dirname, "./define-messages-string-keys/actual.js"),
+        path.join(__dirname, "./define-messages-string-keys/expected.js"), BABEL_OPTIONS);
+    });
+    it("should transform 'defineMessages' by default (literal keys)", function () {
+      return assertTransform(
+        path.join(__dirname, "./define-messages-literal-keys/actual.js"),
+        path.join(__dirname, "./define-messages-literal-keys/expected.js"), BABEL_OPTIONS);
     });
     it("should not transform anything when 'varsContainingMessages' is an empty array", function () {
       var babelOpts = _.clone(BABEL_OPTIONS);
