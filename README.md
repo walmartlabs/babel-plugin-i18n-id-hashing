@@ -1,6 +1,6 @@
 [![Travis Status][trav_img]][trav_site]
 
-# [WIP] babel-plugin-react-intl
+# babel-plugin-react-intl
 
 Namespaces the ID of React-Intl keys
 
