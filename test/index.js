@@ -6,7 +6,7 @@ var path = require("path");
 var BABEL_OPTIONS = {
   "presets": [ "es2015" ],
   "plugins": [
-    ["../lib/index.js", {}]
+    [path.resolve(__dirname, "../lib/index.js"), {}]
   ]
 };
 
@@ -44,6 +44,32 @@ describe("babel-plugin-i18n-id-hashing", function() {
       path.join(__dirname, "./variable-accessor/actual.js"),
       path.join(__dirname,"./variable-accessor/expected.js"), BABEL_OPTIONS);
   });
+  it("should transform variable accessors inside an object spread", function () {
+    const babelOptions = _.merge({}, BABEL_OPTIONS, {
+      "plugins": [
+        "babel-plugin-transform-object-rest-spread",
+        [path.resolve(__dirname, "../lib/index.js"), {}]
+      ]
+    });
+
+    return assertTransform(
+      path.join(__dirname, "./object-spread-literal-accessor/actual.js"),
+      path.join(__dirname,"./object-spread-literal-accessor/expected.js"), babelOptions);
+  });
+  it("should transform variable accessors inside a jsx object spread", function () {
+    const babelOptions = _.merge({}, BABEL_OPTIONS, {
+      "presets": [ "es2015", "react" ],
+      "plugins": [
+        "babel-plugin-transform-object-rest-spread",
+        [path.resolve(__dirname, "../lib/index.js"), {}]
+      ]
+    });
+
+    return assertTransform(
+      path.join(__dirname, "./object-spread-literal-accessor-jsx/actual.js"),
+      path.join(__dirname,"./object-spread-literal-accessor-jsx/expected.js"), babelOptions);
+  });
+
   describe("options", function () {
     it("should transform 'defineMessages' by default (string keys)", function () {
       return assertTransform(

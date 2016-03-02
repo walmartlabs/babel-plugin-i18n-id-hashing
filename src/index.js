@@ -147,7 +147,18 @@ const i18nIdHashing = function ({ types: t }) {
           return;
         }
 
+        // Ensure the node is not processed multiple times as other plugins modify the tree. This
+        // should be handled by pathNode.skip() but there is a bug
+        // https://phabricator.babeljs.io/T7117
+        if (pathNode.node.i18nHash) {
+          return;
+        } else {
+          pathNode.node.i18nHash = true;
+        }
+
         // Use a relative path to ensure hash key is the same on any system
+        // TODO: Make sure this path is relative to the cwd
+        // TODO: state.file.opts.filename can be "unknown"
         const filePath = path.relative(__dirname, state.file.opts.filename);
 
         const accessor = pathNode.get("property");

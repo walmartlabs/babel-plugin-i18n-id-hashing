@@ -18,7 +18,7 @@ var CancelButton = function CancelButton() {
   return React.createElement(
     "button",
     null,
-    React.createElement(_reactIntl.FormattedMessage, defaultMessages["c63c96bba4ba4f28992169dd214843d63818e26c.c63c96bba4ba4f28992169dd214843d63818e26c.c63c96bba4ba4f28992169dd214843d63818e26c.cancel-button"])
+    React.createElement(_reactIntl.FormattedMessage, defaultMessages["c63c96bba4ba4f28992169dd214843d63818e26c.cancel-button"])
   );
 };
 
