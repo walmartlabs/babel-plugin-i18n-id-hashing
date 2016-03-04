@@ -52,6 +52,24 @@ const i18nIdHashing = function ({ types: t }) {
   };
 
   /**
+   * @param  {Object}  filepath - The path to the file Babel is running over
+   *
+   * @return {Object}  Returns the path relative to the cwd
+   */
+  const getRelativeFilePath = function(filePath) {
+    return path.relative(process.cwd(), filePath);
+  }
+
+  /**
+   * @param  {Object}  filepath - The path to the file Babel is running over
+   *
+   * @return {Object}  A SHA1 hash of the path relative to the cwd
+   */
+  const getFileHash = function (filePath) {
+    return getHash(getRelativeFilePath(filePath));
+  }
+
+  /**
    * @param  {ASTNode}  pathNode - An AST node representing a POJO.
    *
    * @return {Object}  A POJO representation of an AST node
@@ -71,7 +89,7 @@ const i18nIdHashing = function ({ types: t }) {
     }, {});
   };
 
-  const processMessage = function processMessage(filename, messageObj) {
+  const processMessage = function processMessage(fileHash, messageObj) {
     if (!(messageObj[1] && messageObj[1].isObjectExpression())) {
       throw messageObj.buildCodeFrameError(
         `[babel-plugin-i18n-id-hashing] ${messageObj.node.name}() must be called with message ` +
@@ -101,7 +119,7 @@ const i18nIdHashing = function ({ types: t }) {
       [1]; //eslint-disable-line no-unexpected-multiline
 
     const objectProperties = generateObjectFromNode(messageObj[1]);
-    const generatedMessageId = `${getHash(filename)}.${objectProperties.id}`;
+    const generatedMessageId = `${fileHash}.${objectProperties.id}`;
 
     // TODO: Error if the object key and the id property are mismatched
 
@@ -128,8 +146,7 @@ const i18nIdHashing = function ({ types: t }) {
         // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
         const messagesObj = pathNode.get("arguments")[0];
 
-        // Use a relative path to ensure hash key is the same on any system
-        const filePath = path.relative(__dirname, state.file.opts.filename);
+        const fileHash = getFileHash(state.file.opts.filename)
 
         // Process each message
         messagesObj
@@ -138,7 +155,7 @@ const i18nIdHashing = function ({ types: t }) {
             prop.get("key"),
             prop.get("value")
           ])
-          .forEach(processMessage.bind(null, filePath));
+          .forEach(processMessage.bind(null, fileHash));
       },
       // TODO: if this gets called before CallExpression Visitor - register a search for that key
       MemberExpression(pathNode, state) {
@@ -156,21 +173,17 @@ const i18nIdHashing = function ({ types: t }) {
           pathNode.node.i18nHash = true;
         }
 
-        // Use a relative path to ensure hash key is the same on any system
-        // TODO: Make sure this path is relative to the cwd
-        // TODO: state.file.opts.filename can be "unknown"
-        const filePath = path.relative(__dirname, state.file.opts.filename);
-
+        const fileHash = getFileHash(state.file.opts.filename)
         const accessor = pathNode.get("property");
 
         if (accessor.type === "StringLiteral") {
-          accessor.replaceWith(t.stringLiteral(`${getHash(filePath)}.${accessor.node.value}`));
+          accessor.replaceWith(t.stringLiteral(`${fileHash}.${accessor.node.value}`));
         } else {
           // Convert xMemberExpression.identifier -> xMemberExpression[identifier]
           pathNode.node.computed = true;
           // Add the hash to the result of any Identifier or Expression
           accessor.replaceWith(
-            t.binaryExpression("+", t.stringLiteral(getHash(filePath)), accessor.node)
+            t.binaryExpression("+", t.stringLiteral(fileHash), accessor.node)
           );
         }
       }
