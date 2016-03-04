@@ -15,7 +15,7 @@
     "babel-runtime": "^6.2.0"
   },
   "devDependencies": {
-    "assert-transform": "walmartreact/assert-transform",
+    "assert-transform": "^1.0.0",
     "babel-cli": "^6.1.18",
     "babel-core": "^6.3.17",
     "babel-eslint": "5.0.0",
@@ -30,7 +30,7 @@
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-filenames": "^0.2.0",
     "eslint": "^1.10.3",
-    "lodash": "^3.10.1",
+    "lodash": "^4.6.1",
     "mocha": "^2.3.4",
     "rimraf": "^2.4.3"
   },
