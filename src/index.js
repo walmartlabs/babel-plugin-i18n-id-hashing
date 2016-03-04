@@ -1,3 +1,5 @@
+"use strict";
+
 import crypto from "crypto";
 import path from "path";
 
@@ -52,22 +54,22 @@ const i18nIdHashing = function ({ types: t }) {
   };
 
   /**
-   * @param  {Object}  filepath - The path to the file Babel is running over
+   * @param  {Object}  filePath - The path to the file Babel is running over
    *
    * @return {Object}  Returns the path relative to the cwd
    */
-  const getRelativeFilePath = function(filePath) {
+  const getRelativeFilePath = function getRelativeFilePath(filePath) {
     return path.relative(process.cwd(), filePath);
-  }
+  };
 
   /**
-   * @param  {Object}  filepath - The path to the file Babel is running over
+   * @param  {Object}  filePath - The path to the file Babel is running over
    *
    * @return {Object}  A SHA1 hash of the path relative to the cwd
    */
-  const getFileHash = function (filePath) {
+  const getFileHash = function getFileHash(filePath) {
     return getHash(getRelativeFilePath(filePath));
-  }
+  };
 
   /**
    * @param  {ASTNode}  pathNode - An AST node representing a POJO.
@@ -146,7 +148,7 @@ const i18nIdHashing = function ({ types: t }) {
         // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
         const messagesObj = pathNode.get("arguments")[0];
 
-        const fileHash = getFileHash(state.file.opts.filename)
+        const fileHash = getFileHash(state.file.opts.filename);
 
         // Process each message
         messagesObj
@@ -173,7 +175,7 @@ const i18nIdHashing = function ({ types: t }) {
           pathNode.node.i18nHash = true;
         }
 
-        const fileHash = getFileHash(state.file.opts.filename)
+        const fileHash = getFileHash(state.file.opts.filename);
         const accessor = pathNode.get("property");
 
         if (accessor.type === "StringLiteral") {
