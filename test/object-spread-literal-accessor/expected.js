@@ -12,4 +12,4 @@ defaultMessage: "Major Keys to Success"
 }
 };
 
-var x = _extends({}, defaultMessages["c63c96bba4ba4f28992169dd214843d63818e26c.something"]);
+var x = _extends({}, defaultMessages["ce38dee655f16a429099fce23c8c3bd2579fa65e.something"]);

@@ -12,6 +12,6 @@ defaultMessage: "Major Keys to Success"
 }
 };
 
-var x = React.createElement("div", _extends({}, defaultMessages["c63c96bba4ba4f28992169dd214843d63818e26c.something"], {
+var x = React.createElement("div", _extends({}, defaultMessages["ebfd62eb8af5dfa556183fa73a908adf6be3fc73.something"], {
 className: "i-hate-javascript"
 }));
