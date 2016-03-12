@@ -8,8 +8,17 @@ const IDENTIFIERS_THAT_CONTAIN_MESSAGES = ["defaultMessages"];
 
 const i18nIdHashing = function ({ types: t }) {
   const referencesImport = function referencesImport(pathNode, mod, importedNames) {
-    if (!(pathNode.isIdentifier() || pathNode.isJSXIdentifier())) { return false; }
-    return importedNames.some((name) => pathNode.referencesImport(mod, name));
+    if (pathNode.isSequenceExpression()) {
+      const sequenceExpressionValue =
+        pathNode.node.expressions[pathNode.node.expressions.length - 1];
+
+      if (sequenceExpressionValue.property && sequenceExpressionValue.property.name) {
+        return importedNames.some((name) => name === sequenceExpressionValue.property.name);
+      }
+    } else if (pathNode.isIdentifier() || pathNode.isJSXIdentifier()) {
+      return importedNames.some((name) => pathNode.referencesImport(mod, name));
+    }
+    return false;
   };
 
   /**
@@ -144,14 +153,11 @@ const i18nIdHashing = function ({ types: t }) {
         const identifierWhitelist = getIdentifiersThatDefineMessages(state.opts);
         if (referencesImport(callee, moduleSourceName, identifierWhitelist) === false) { return; }
 
-        // FUNCTIONS_THAT_DEFINE_MESSAGES functions are of the form function(Object messages)
-        // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
-        const messagesObj = pathNode.get("arguments")[0];
-
         const fileHash = getFileHash(state.file.opts.filename);
 
-        // Process each message
-        messagesObj
+        // FUNCTIONS_THAT_DEFINE_MESSAGES functions are of the form function(Object messages)
+        // https://github.com/yahoo/react-intl/blob/2fdf9e7e695fa04673573d72ab6265f0eef3f98e/src/react-intl.js#L25-L29
+        pathNode.get("arguments")[0]
           .get("properties")
           .map((prop) => [
             prop.get("key"),
