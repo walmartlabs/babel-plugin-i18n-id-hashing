@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-i18n-id-hashing",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Namespaces the ID of React-Intl keys",
   "license": "MIT",
   "main": "lib/index.js",

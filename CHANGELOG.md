@@ -1,3 +1,9 @@
+## 2.1.0 (2016-03-14)
+
+#### User Facing Changes
+
+* Correct bug where SequenceExpressions were not being transformed correctly to enable this plugin to run over pre-compiled code
+
 ## 2.0.0 (2016-03-04)
 
 #### User Facing Changes
